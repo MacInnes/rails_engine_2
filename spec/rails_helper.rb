@@ -1,3 +1,10 @@
+require 'simplecov'
+SimpleCov.start 'rails' do
+  add_filter "app/channels/application_cable/channel.rb"
+  add_filter "app/channels/application_cable/connection.rb"
+  add_filter "app/jobs/application_job.rb"
+  add_filter "app/mailers/application_mailer.rb"
+end
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 require 'spec_helper'
 ENV['RAILS_ENV'] ||= 'test'
@@ -58,4 +65,11 @@ RSpec.configure do |config|
   config.filter_rails_from_backtrace!
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
+end
+
+Shoulda::Matchers.configure do |config|
+  config.integrate do |with|
+    with.test_framework :rspec
+    with.library :rails
+  end
 end
