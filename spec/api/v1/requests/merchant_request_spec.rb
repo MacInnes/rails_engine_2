@@ -125,4 +125,12 @@ describe 'Merchant API' do
     expect(response_merchants.length).to eq(3)
   end
 
+  it 'responds to /api/v1/merchants/random' do
+    create_list(:merchant, 5)
+
+    get '/api/v1/merchants/random'
+
+    expect(response).to be_successful
+  end
+
 end
