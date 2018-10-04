@@ -5,4 +5,6 @@ class Transaction < ApplicationRecord
                         :created_at,
                         :updated_at
   belongs_to :invoice
+
+  scope :success, -> { where(result: 'success')}
 end
