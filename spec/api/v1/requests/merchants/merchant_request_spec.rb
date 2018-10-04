@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'Merchant API' do
+describe 'Merchant endpoints' do
   it 'responds to /api/v1/merchants' do
     create_list(:merchant, 3)
 
