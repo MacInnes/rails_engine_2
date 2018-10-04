@@ -16,6 +16,11 @@ Rails.application.routes.draw do
         resources :merchants, only: [:index, :show]
       end
 
+      namespace :items do
+        get '/find', to: 'items_search#show'
+        get '/find_all', to: 'items_search#index'
+      end
+
       scope module: :items do
         resources :items, only: [:index, :show]
       end
