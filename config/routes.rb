@@ -8,6 +8,7 @@ Rails.application.routes.draw do
         get '/most_revenue', to: 'merchant_most_revenue#index'
         get '/most_items', to: 'merchant_most_items#index'
         get '/revenue', to: 'merchant_revenue#index'
+        get '/:merchant_id/revenue', to: 'single_merchant_revenue#show'
       end
 
       scope module: :merchants do

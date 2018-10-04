@@ -29,10 +29,18 @@ class Merchant < ApplicationRecord
 
   def self.revenue_by_date(date)
     date = date.to_date
-    Merchant.select("SUM(invoice_items.quantity * invoice_items.unit_price) AS revenue")
+    Merchant.select("SUM(invoice_items.quantity * invoice_items.unit_price) AS total_revenue")
       .joins(invoices: [:transactions, :invoice_items])
       .merge(Transaction.success)
       .where("invoices.created_at BETWEEN ? AND ?", date.beginning_of_day, date.end_of_day)
+      .limit(1)
+      .take
+  end
+
+  def revenue
+    invoices.select("SUM(invoice_items.quantity * invoice_items.unit_price) AS total_revenue")
+      .joins(:invoice_items, :transactions)
+      .merge(Transaction.success)
       .limit(1)
       .take
   end

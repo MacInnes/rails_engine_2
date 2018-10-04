@@ -47,4 +47,11 @@ describe "Merchant BI" do
 
     expect(response).to be_successful
   end
+
+  it 'responds to /api/v1/merchants/:id/revenue' do
+    merchant = create(:merchant)
+    get "/api/v1/merchants/#{merchant.id}/revenue"
+
+    expect(response).to be_successful
+  end
 end
