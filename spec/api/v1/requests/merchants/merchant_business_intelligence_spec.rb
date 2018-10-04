@@ -62,4 +62,12 @@ describe "Merchant BI" do
 
     expect(response).to be_successful
   end
+
+  it 'responds to /api/v1/merchants/:id/favorite_customer' do
+    merchant = create(:merchant)
+
+    get "/api/v1/merchants/#{merchant.id}/favorite_customer"
+
+    expect(response).to be_successful
+  end
 end

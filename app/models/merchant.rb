@@ -55,4 +55,13 @@ class Merchant < ApplicationRecord
       .take
   end
 
+  def favorite_customer
+    customers.select("customers.*, COUNT(customers.id) AS invoice_count")
+      .joins(:invoices)
+      .group(:id)
+      .order("invoice_count DESC")
+      .limit(1)
+      .take
+  end
+
 end
