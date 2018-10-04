@@ -7,6 +7,7 @@ Rails.application.routes.draw do
         get '/random', to: 'random_merchant#show'
         get '/most_revenue', to: 'merchant_most_revenue#index'
         get '/most_items', to: 'merchant_most_items#index'
+        get '/revenue', to: 'merchant_revenue#index'
       end
 
       scope module: :merchants do

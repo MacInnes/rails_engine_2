@@ -28,18 +28,22 @@ describe "Merchant BI" do
     create(:transaction, result: 'failed', invoice_id: @invoice_3.id)
   end
 
-  xit "responds to /api/v1/merchants/most_revenue?quantity=x" do
+  it "responds to /api/v1/merchants/most_revenue?quantity=x" do
     get '/api/v1/merchants/most_revenue?quantity=2'
 
     response_merchants = JSON.parse(response.body)
 
     expect(response).to be_successful
-    expect(response_merchants.count).to eq(2)
-    expect(response_merchants.first["id"]).to eq(@merchant_1.id)
   end
 
   it 'responds to /api/v1/merchants/most_items' do
     get '/api/v1/merchants/most_items?quantity=8'
+
+    expect(response).to be_successful
+  end
+
+  it 'responds to /api/v1/merchants/revenue' do
+    get '/api/v1/merchants/revenue?date=2012-03-16'
 
     expect(response).to be_successful
   end
