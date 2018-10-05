@@ -81,4 +81,68 @@ describe 'Customer endpoints' do
     expect(response).to be_successful
     expect(response_customer["id"]).to eq(target.id)
   end
+
+  #find all
+
+  it 'responds to /api/v1/customers/find_all?id=x' do
+    create_list(:customer, 4)
+    target = create(:customer)
+
+    get "/api/v1/customers/find_all?id=#{target.id}"
+
+    response_customer = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(response_customer.first["id"]).to eq(target.id)
+  end
+
+  it 'responds to /api/v1/customers/find_all?first_name=asdf' do
+    create_list(:customer, 4)
+    create_list(:customer, 3, first_name: "asdf")
+
+    get "/api/v1/customers/find_all?first_name=asdf"
+
+    response_customers = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(response_customers.length).to eq(3)
+  end
+
+  it 'responds to /api/v1/customers/find_all?last_name=asdf' do
+    create_list(:customer, 4)
+    create_list(:customer, 3, last_name: "asdf")
+
+    get "/api/v1/customers/find_all?last_name=asdf"
+
+    response_customers = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(response_customers.length).to eq(3)
+  end
+
+  it 'responds to /api/v1/customers/find_all?created_at=2012-03-27T14:56:04.000Z' do
+    create_list(:customer, 4)
+    create_list(:customer, 3, created_at: "2012-03-27T14:56:04.000Z")
+
+    get "/api/v1/customers/find_all?created_at=2012-03-27T14:56:04.000Z"
+
+    response_customers = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(response_customers.length).to eq(3)
+
+  end
+
+  it 'responds to /api/v1/customers/find_all?updated_at=2012-03-27T14:56:04.000Z' do
+    create_list(:customer, 4)
+    create_list(:customer, 3, updated_at: "2012-03-27T14:56:04.000Z")
+
+    get "/api/v1/customers/find_all?updated_at=2012-03-27T14:56:04.000Z"
+
+    response_customers = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(response_customers.length).to eq(3)
+  end
+
 end

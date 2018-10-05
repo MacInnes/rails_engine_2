@@ -36,6 +36,7 @@ Rails.application.routes.draw do
 
       namespace :customers do
         get '/find', to: 'customer_search#show'
+        get '/find_all', to: 'customer_search#index'
       end
 
       scope module: :customers do
