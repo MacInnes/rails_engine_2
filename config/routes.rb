@@ -27,6 +27,7 @@ Rails.application.routes.draw do
 
       namespace :invoices do
         get '/find', to: 'invoice_search#show'
+        get '/find_all', to: 'invoice_search#index'
       end
 
       scope module: :invoices do
