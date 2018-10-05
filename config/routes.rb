@@ -33,6 +33,10 @@ Rails.application.routes.draw do
       scope module: :invoices do
         resources :invoices, only: [:index, :show]
       end
+
+      scope module: :customers do
+        resources :customers, only: [:index, :show]
+      end
     end
   end
 
