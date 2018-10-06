@@ -52,7 +52,14 @@ Rails.application.routes.draw do
         resources :invoice_items, only: [:index, :show]
       end
 
+      namespace :transactions do
+        get '/find', to: 'transactions_search#show'
+        get '/find_all', to: 'transactions_search#index'
+      end
 
+      scope module: :transactions do
+        resources :transactions, only: [:index, :show]
+      end
     end
   end
 
