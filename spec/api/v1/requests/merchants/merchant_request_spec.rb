@@ -133,4 +133,35 @@ describe 'Merchant endpoints' do
     expect(response).to be_successful
   end
 
+  # relationships:
+
+  it 'responds to /api/v1/merchants/:id/items' do
+    merchant = create(:merchant)
+    other_merchant = create(:merchant)
+    other_items = create_list(:item, 2, merchant_id: other_merchant.id)
+    items = create_list(:item, 5, merchant_id: merchant.id)
+
+    get "/api/v1/merchants/#{merchant.id}/items"
+
+    response_items = JSON.parse(response.body)
+    expect(response).to be_successful
+    expect(response_items.length).to eq(5)
+    expect(response_items.first["merchant_id"]).to eq(merchant.id)
+  end
+
+  it 'responds to /api/v1/merchants/:id/invoices' do
+    merchant = create(:merchant)
+    other_merchant = create(:merchant)
+    customer = create(:customer)
+    other_invoices = create_list(:invoice, 2, merchant_id: other_merchant.id, customer_id: customer.id)
+    invoices = create_list(:invoice, 5, merchant_id: merchant.id, customer_id: customer.id)
+
+    get "/api/v1/merchants/#{merchant.id}/invoices"
+
+    response_invoices = JSON.parse(response.body)
+    expect(response).to be_successful
+    expect(response_invoices.length).to eq(5)
+    expect(response_invoices.first["merchant_id"]).to eq(merchant.id)
+  end
+
 end

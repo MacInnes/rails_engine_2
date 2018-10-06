@@ -10,6 +10,8 @@ Rails.application.routes.draw do
         get '/revenue', to: 'merchant_revenue#index'
         get '/:merchant_id/revenue', to: 'single_merchant_revenue#show'
         get '/:merchant_id/favorite_customer', to: 'favorite_customer#show'
+        get '/:merchant_id/items', to: 'merchant_items#index'
+        get '/:merchant_id/invoices', to: 'merchant_invoices#index'
       end
 
       scope module: :merchants do
@@ -19,6 +21,8 @@ Rails.application.routes.draw do
       namespace :items do
         get '/find', to: 'items_search#show'
         get '/find_all', to: 'items_search#index'
+        get '/:item_id/invoice_items', to: 'item_invoice_items#index'
+        get '/:item_id/merchant', to: 'item_merchant#show'
       end
 
       scope module: :items do
@@ -28,6 +32,11 @@ Rails.application.routes.draw do
       namespace :invoices do
         get '/find', to: 'invoice_search#show'
         get '/find_all', to: 'invoice_search#index'
+        get '/:invoice_id/transactions', to: 'invoice_transactions#index'
+        get '/:invoice_id/invoice_items', to: 'invoice_invoice_items#index'
+        get '/:invoice_id/items', to: 'invoice_items#index'
+        get '/:invoice_id/customer', to: 'invoice_customer#show'
+        get '/:invoice_id/merchant', to: 'invoice_merchant#show'
       end
 
       scope module: :invoices do
@@ -37,6 +46,8 @@ Rails.application.routes.draw do
       namespace :customers do
         get '/find', to: 'customer_search#show'
         get '/find_all', to: 'customer_search#index'
+        get '/:customer_id/invoices', to: 'customer_invoices#index'
+        get '/:customer_id/transactions', to: 'customer_transactions#index'
       end
 
       scope module: :customers do
@@ -46,6 +57,8 @@ Rails.application.routes.draw do
       namespace :invoice_items do
         get '/find', to: 'invoice_items_search#show'
         get '/find_all', to: 'invoice_items_search#index'
+        get '/:invoice_item_id/invoice', to: 'invoice_items_invoice#show'
+        get '/:invoice_item_id/item', to: 'invoice_items_item#show'
       end
 
       scope module: :invoice_items do
@@ -55,6 +68,7 @@ Rails.application.routes.draw do
       namespace :transactions do
         get '/find', to: 'transactions_search#show'
         get '/find_all', to: 'transactions_search#index'
+        get '/:transaction_id/invoice', to: 'transaction_invoice#show'
       end
 
       scope module: :transactions do

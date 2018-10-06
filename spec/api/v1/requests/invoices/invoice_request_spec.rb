@@ -194,4 +194,95 @@ describe 'Invoices endpoints' do
     expect(response).to be_successful
     expect(response_invoice.first["id"]).to eq(invoice.id)
   end
+
+  # relationships:
+
+  it 'responds to /api/v1/invoices/:id/transactions' do
+    customer = create(:customer)
+    merchant = create(:merchant)
+    invoice = create(:invoice, merchant_id: merchant.id, customer_id: customer.id)
+    other_invoice = create(:invoice, merchant_id: merchant.id, customer_id: customer.id)
+    other_transactions = create_list(:transaction, 3, invoice_id: other_invoice.id)
+    transactions = create_list(:transaction, 5, invoice_id: invoice.id)
+
+    get "/api/v1/invoices/#{invoice.id}/transactions"
+
+    response_transactions = JSON.parse(response.body)
+    expect(response).to be_successful
+    expect(response_transactions.length).to eq(5)
+    expect(response_transactions.first["invoice_id"]).to eq(invoice.id)
+  end
+
+  it 'responds to /api/v1/invoices/:id/invoice_items' do
+    customer = create(:customer)
+    merchant = create(:merchant)
+    invoice = create(:invoice, merchant_id: merchant.id, customer_id: customer.id)
+    other_invoice = create(:invoice, merchant_id: merchant.id, customer_id: customer.id)
+    item = create(:item, merchant_id: merchant.id)
+    other_invoice_items = create_list(:invoice_item, 3, item_id: item.id, invoice_id: other_invoice.id)
+    invoice_items = create_list(:invoice_item, 5, item_id: item.id, invoice_id: invoice.id)
+
+    get "/api/v1/invoices/#{invoice.id}/invoice_items"
+
+    response_invoice_items = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(response_invoice_items.length).to eq(5)
+    expect(response_invoice_items.first["invoice_id"]).to eq(invoice.id)
+  end
+
+  it 'responds to /api/v1/invoices/:id/items' do
+    customer = create(:customer)
+    merchant = create(:merchant)
+    invoice = create(:invoice, merchant_id: merchant.id, customer_id: customer.id)
+    other_invoice = create(:invoice, merchant_id: merchant.id, customer_id: customer.id)
+    valid_item_1 = create(:item, merchant_id: merchant.id)
+    valid_item_2 = create(:item, merchant_id: merchant.id)
+    valid_item_3 = create(:item, merchant_id: merchant.id)
+    invalid_item = create(:item, merchant_id: merchant.id)
+    other_invoice_items = create_list(:invoice_item, 3, item_id: invalid_item.id, invoice_id: other_invoice.id)
+    invoice_items_1 = create(:invoice_item, item_id: valid_item_1.id, invoice_id: invoice.id, quantity: 5)
+    invoice_items_2 = create(:invoice_item, item_id: valid_item_2.id, invoice_id: invoice.id, quantity: 3)
+    invoice_items_3 = create(:invoice_item, item_id: valid_item_3.id, invoice_id: invoice.id, quantity: 2)
+
+    get "/api/v1/invoices/#{invoice.id}/items"
+
+    response_items = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(response_items.length).to eq(3)
+    expect(response_items[0]["id"]).to eq(valid_item_1.id)
+    expect(response_items[1]["id"]).to eq(valid_item_2.id)
+    expect(response_items[2]["id"]).to eq(valid_item_3.id)
+  end
+
+  it 'responds to /api/v1/invoices/:id/customer' do
+    merchant = create(:merchant)
+    customer = create(:customer)
+    other_customer = create(:customer)
+    other_invoice = create(:invoice, merchant_id: merchant.id, customer_id: other_customer.id)
+    invoice = create(:invoice, merchant_id: merchant.id, customer_id: customer.id)
+
+    get "/api/v1/invoices/#{invoice.id}/customer"
+
+    response_customer = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(response_customer["id"]).to eq(customer.id)
+  end
+
+  it 'responds to /api/v1/invoices/:id/merchant' do
+    merchant = create(:merchant)
+    other_merchant = create(:merchant)
+    customer = create(:customer)
+    other_invoice = create(:invoice, merchant_id: other_merchant.id, customer_id: customer.id)
+    invoice = create(:invoice, merchant_id: merchant.id, customer_id: customer.id)
+
+    get "/api/v1/invoices/#{invoice.id}/merchant"
+
+    response_merchant = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(response_merchant["id"]).to eq(merchant.id)
+  end
 end

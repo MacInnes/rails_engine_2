@@ -145,4 +145,40 @@ describe 'Customer endpoints' do
     expect(response_customers.length).to eq(3)
   end
 
+  # relationships
+
+  it 'responds to /api/v1/customers/:id/invoices' do
+    customer = create(:customer)
+    other_customer = create(:customer)
+    merchant = create(:merchant)
+    invoices = create_list(:invoice, 5, merchant_id: merchant.id, customer_id: customer.id)
+    other_invoices = create_list(:invoice, 3, merchant_id: merchant.id, customer_id: other_customer.id)
+
+    get "/api/v1/customers/#{customer.id}/invoices"
+
+    response_invoices = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(response_invoices.length).to eq(5)
+    expect(response_invoices.first["customer_id"]).to eq(customer.id)
+  end
+
+  it 'responds to /api/v1/customers/:id/transactions' do
+    customer = create(:customer)
+    other_customer = create(:customer)
+    merchant = create(:merchant)
+    invoice = create(:invoice, merchant_id: merchant.id, customer_id: customer.id)
+    other_invoice = create(:invoice, merchant_id: merchant.id, customer_id: other_customer.id)
+    transactions = create_list(:transaction, 5, invoice_id: invoice.id)
+    other_transactions = create_list(:transaction, 3, invoice_id: other_invoice.id)
+
+    get "/api/v1/customers/#{customer.id}/transactions"
+
+    response_transactions = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(response_transactions.first["invoice_id"]).to eq(invoice.id)
+
+  end
+
 end

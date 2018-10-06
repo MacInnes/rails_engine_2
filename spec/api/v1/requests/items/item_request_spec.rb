@@ -172,4 +172,40 @@ describe 'Item endpoints' do
     expect(response_items.first["unit_price"]).to eq("1.23")
   end
 
+  # relationships:
+
+  it 'responds to /api/v1/items/:id/invoice_items' do
+    merchant = create(:merchant)
+    customer = create(:customer)
+    item = create(:item, merchant_id: merchant.id)
+    other_item = create(:item, merchant_id: merchant.id)
+    invoice_1 = create(:invoice, merchant_id: merchant.id, customer_id: customer.id)
+    invoice_2 = create(:invoice, merchant_id: merchant.id, customer_id: customer.id)
+    invoice_item_1 = create(:invoice_item, item_id: item.id, invoice_id: invoice_1.id)
+    invoice_item_2 = create(:invoice_item, item_id: item.id, invoice_id: invoice_2.id)
+    other_invoice_item = create(:invoice_item, item_id: other_item.id, invoice_id: invoice_2.id)
+
+    get "/api/v1/items/#{item.id}/invoice_items"
+
+    response_invoice_items = JSON.parse(response.body)
+    expect(response).to be_successful
+    expect(response_invoice_items.length).to eq(2)
+    expect(response_invoice_items.first["id"]).to eq(invoice_item_1.id)
+  end
+
+  it 'responds to /api/v1/items/:id/merchant' do
+    merchant = create(:merchant)
+    other_merchant = create(:merchant)
+    customer = create(:customer)
+    other_item = create(:item, merchant_id: other_merchant.id)
+    item = create(:item, merchant_id: merchant.id)
+
+    get "/api/v1/items/#{item.id}/merchant"
+
+    response_merchant = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(response_merchant["id"]).to eq(merchant.id)
+  end
+
 end

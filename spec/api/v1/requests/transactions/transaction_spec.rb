@@ -209,4 +209,21 @@ describe 'Transaction endpoints' do
     expect(response).to be_successful
     expect(response_transaction.first["id"]).to eq(transaction.id)
   end
+
+  # relationships:
+
+  it 'responds to /api/v1/transactions/:id/invoice' do
+    merchant = create(:merchant)
+    customer = create(:customer)
+    invoice = create(:invoice, customer_id: customer.id, merchant_id: merchant.id)
+    other_invoice = create(:invoice, customer_id: customer.id, merchant_id: merchant.id)
+    other_transaction = create(:transaction, invoice_id: other_invoice.id)
+    transaction = create(:transaction, invoice_id: invoice.id)
+
+    get "/api/v1/transactions/#{transaction.id}/invoice"
+
+    response_invoice = JSON.parse(response.body)
+    expect(response).to be_successful
+    expect(response_invoice["id"]).to eq(invoice.id)
+  end
 end
