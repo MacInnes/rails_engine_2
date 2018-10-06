@@ -1,7 +1,7 @@
 class Api::V1::Customers::CustomerSearchController < ApplicationController
 
   def show
-    render json: Customer.find_by(search_params)
+    render json: Customer.order(:id).find_by(search_params)
   end
 
   def index

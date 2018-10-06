@@ -1,7 +1,7 @@
 class Api::V1::Invoices::InvoiceSearchController < ApplicationController
 
   def show
-    render json: Invoice.find_by(search_params)
+    render json: Invoice.order(:id).find_by(search_params)
   end
 
   def index
