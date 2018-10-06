@@ -31,12 +31,11 @@ describe "Merchant BI" do
   it "responds to /api/v1/merchants/most_revenue?quantity=x" do
     get '/api/v1/merchants/most_revenue?quantity=2'
 
-    response_merchants = JSON.parse(response.body)
-
     expect(response).to be_successful
   end
 
   it 'responds to /api/v1/merchants/most_items' do
+
     get '/api/v1/merchants/most_items?quantity=8'
 
     expect(response).to be_successful
@@ -64,10 +63,18 @@ describe "Merchant BI" do
   end
 
   it 'responds to /api/v1/merchants/:id/favorite_customer' do
-    merchant = create(:merchant)
+    merchant = build(:merchant, id: 1)
+    customer = build(:customer)
+
+    allow(Merchant).to receive(:find).and_return(merchant)
+    allow(merchant).to receive(:favorite_customer).and_return(customer)
 
     get "/api/v1/merchants/#{merchant.id}/favorite_customer"
 
+    response_customer = JSON.parse(response.body)
+
     expect(response).to be_successful
+    expect(response_customer["id"]).to eq(customer.id)
+
   end
 end

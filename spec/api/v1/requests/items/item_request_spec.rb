@@ -68,6 +68,20 @@ describe 'Item endpoints' do
     expect(response_item["id"]).to eq(item.id)
   end
 
+  it 'responds to /api/v1/items/find?merchant_id=x' do
+    merchant = create(:merchant)
+    wrong_merchant = create(:merchant)
+    item = create(:item, merchant_id: merchant.id)
+    create_list(:item, 5, merchant_id: wrong_merchant.id)
+
+    get "/api/v1/items/find?merchant_id=#{merchant.id}"
+
+    response_item = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(response_item["id"]).to eq(item.id)
+  end
+
   #multi_finders:
 
   it 'responds to /api/v1/items/find?id=x' do
@@ -95,10 +109,10 @@ describe 'Item endpoints' do
   it 'responds to /api/v1/items/find_all?created_at=x' do
     merchant = create(:merchant)
     target_date = "2012-03-27 14:53:59"
-    target_item = create(:item, merchant_id: merchant.id, created_at: target_date)
-    items = create_list(:item, 5, merchant_id: merchant.id)
+    target_items = create_list(:item, 5, merchant_id: merchant.id, created_at: target_date)
+    other_items = create_list(:item, 2, merchant_id: merchant.id)
 
-    get "/api/v1/items/find_all?created_at=#{items.first.created_at}"
+    get "/api/v1/items/find_all?created_at=#{target_date}"
 
     response_items = JSON.parse(response.body)
     expect(response).to be_successful
@@ -131,8 +145,18 @@ describe 'Item endpoints' do
     expect(response_items.first["description"]).to eq("asdf")
   end
 
-  it 'responds to /api/v1/items/find_all?unit_price=123' do
+  it 'responds to /api/v1/items/find_all?unit_price=123.86' do
+    merchant = create(:merchant)
+    valid_items = create_list(:item, 5, merchant_id: merchant.id, unit_price: 12386)
+    invalid_items = create_list(:item, 3, merchant_id: merchant.id, unit_price: 123)
 
+    get '/api/v1/items/find_all?unit_price=123.86'
+
+    response_items = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(response_items.length).to eq(5)
+    expect(response_items.first["unit_price"]).to eq("123.86")
   end
 
   it 'responds to /api/v1/items/find_all?merchant_id=x' do

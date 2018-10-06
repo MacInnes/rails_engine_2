@@ -10,6 +10,7 @@ class Api::V1::Items::ItemsSearchController < ApplicationController
 
   private
   def search_params
-    params.permit(:id, :name, :created_at, :updated_at, :description, :unit_price)
+    params[:unit_price] = params[:unit_price].delete('.').to_i if params[:unit_price]
+    params.permit(:id, :name, :created_at, :updated_at, :description, :unit_price, :merchant_id)
   end
 end
