@@ -25,6 +25,7 @@ Rails.application.routes.draw do
         get '/:item_id/merchant', to: 'item_merchant#show'
         get '/most_revenue', to: 'item_revenue#index'
         get '/most_items', to: 'item_count#index'
+        get '/:id/best_day', to: 'item_best_day#show'
       end
 
       scope module: :items do
