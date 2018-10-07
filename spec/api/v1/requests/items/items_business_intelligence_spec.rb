@@ -30,13 +30,13 @@ describe 'item BI endpoints' do
   end
 
   it 'responds to /api/v1/items/:id/best_day' do
-    merchant = create(:merchant)
-    item = create(:item, merchant_id: merchant.id)
-    other_item = create(:item, merchant_id: merchant.id)
     date = "2012-03-23T10:55:29.000Z"
+    merchant = create(:merchant)
+    item = create(:item, merchant_id: merchant.id, created_at: date)
+    other_item = create(:item, merchant_id: merchant.id)
 
     allow(Item).to receive(:find).and_return(item)
-    allow(item).to receive(:best_day).and_return({best_day: date})
+    allow(item).to receive(:best_day).and_return(item)
 
     get "/api/v1/items/:id/best_day"
 

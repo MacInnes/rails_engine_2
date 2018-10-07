@@ -51,6 +51,7 @@ Rails.application.routes.draw do
         get '/find_all', to: 'customer_search#index'
         get '/:customer_id/invoices', to: 'customer_invoices#index'
         get '/:customer_id/transactions', to: 'customer_transactions#index'
+        get '/:customer_id/favorite_merchant', to: 'customer_favorite_merchant#show'
       end
 
       scope module: :customers do
