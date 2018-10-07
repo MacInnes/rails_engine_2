@@ -23,6 +23,7 @@ Rails.application.routes.draw do
         get '/find_all', to: 'items_search#index'
         get '/:item_id/invoice_items', to: 'item_invoice_items#index'
         get '/:item_id/merchant', to: 'item_merchant#show'
+        get '/most_revenue', to: 'item_revenue#index'
       end
 
       scope module: :items do
