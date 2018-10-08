@@ -64,4 +64,16 @@ class Merchant < ApplicationRecord
       .take
   end
 
+  def pending_invoices
+    customers.find_by_sql("SELECT customers.* FROM customers
+      INNER JOIN invoices ON customers.id = invoices.customer_id
+      INNER JOIN transactions ON transactions.invoice_id = invoices.id
+      WHERE invoices.merchant_id = #{id}
+      EXCEPT
+      SELECT customers.* FROM customers
+      INNER JOIN invoices ON customers.id = invoices.customer_id
+      INNER JOIN transactions ON transactions.invoice_id = invoices.id
+      WHERE transactions.result = 'success' AND invoices.merchant_id = #{id};")
+  end
+
 end

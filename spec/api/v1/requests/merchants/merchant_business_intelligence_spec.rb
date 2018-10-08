@@ -77,4 +77,18 @@ describe "Merchant BI" do
     expect(response_customer["id"]).to eq(customer.id)
 
   end
+
+  it 'responds to /api/v1/merchants/:id/customers_with_pending_invoices' do
+    merchant = create(:merchant)
+    customer = create(:customer)
+
+    allow(Merchant).to receive(:find).and_return(merchant)
+    allow(merchant).to receive(:pending_invoices).and_return(customer)
+
+    get "/api/v1/merchants/#{merchant.id}/customers_with_pending_invoices"
+
+    response_customer = JSON.parse(response.body)
+    expect(response).to be_successful
+    expect(response_customer["id"]).to eq(customer.id)
+  end
 end

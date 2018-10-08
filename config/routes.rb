@@ -12,6 +12,7 @@ Rails.application.routes.draw do
         get '/:merchant_id/favorite_customer', to: 'favorite_customer#show'
         get '/:merchant_id/items', to: 'merchant_items#index'
         get '/:merchant_id/invoices', to: 'merchant_invoices#index'
+        get '/:merchant_id/customers_with_pending_invoices', to: 'merchant_pending#index'
       end
 
       scope module: :merchants do
